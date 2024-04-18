@@ -1,10 +1,29 @@
-﻿using System.Globalization;
+﻿using Erp_Jornada.ViewModel;
+using Flunt.Notifications;
+using System.Globalization;
 using System.Net;
 
 namespace Erp_Jornada.Tools
 {
     public static class Tool
     {
+
+        public static Dictionary<string, KeyString> GetErros(this IReadOnlyCollection<Notification> notifications)
+        {
+            Dictionary<string, KeyString> erros = [];
+
+            notifications.GroupBy(gn => gn.Key)
+                .ToList()
+                .ForEach(gn => erros
+                .Add(gn.Key, new()
+                {
+                    Errors = gn.Select(n => n.Message)
+                    .ToList()
+                }));
+
+            return erros;
+        }
+
         public static string FormatName(this string name) =>
         CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name.ToLower());
 

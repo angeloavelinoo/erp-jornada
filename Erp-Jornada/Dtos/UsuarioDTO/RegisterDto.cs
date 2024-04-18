@@ -1,18 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Erp_Jornada.Contracts;
+using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 
 namespace Erp_Jornada.Dtos.UsuarioDTO
 {
-    public class RegisterDto
+    public class RegisterDto : BaseDTOValidation
     {
-        [Required(ErrorMessage = "O nome é obrigatório")]
-        public string? Nome { get; set; }
+        public RegisterDto(string nome, string email, string senha, string? role)
+        {
+            AddNotifications(new ContractEmail(email),
+                new ContractPassword(senha),
+                new ContractName(nome));
 
-        [Required(ErrorMessage = "O E-mail é obrigatório")]
-        [EmailAddress(ErrorMessage = "O E-mail é invalido")]
-        public string? Email { get; set; }
+            Nome = nome;
+            Email = email;
+            Senha = senha;
+            Role = role;
+        }
 
-        [Required(ErrorMessage = "A senha é obrigatória")]
-        public string? Senha { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string Senha { get; set; }
         public string? Role { get; set; }
 
 
