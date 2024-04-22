@@ -9,5 +9,7 @@ namespace Erp_Jornada.Repository
         Task<T> Create(T obj);
         Task<T> Update(T obj);
         Task<T> Remove(T obj);
+        Task<IList<T>> GetItemsPaginated(int pageNumber, int pageSize);
+        Task<int> CountItens();
     }
 }

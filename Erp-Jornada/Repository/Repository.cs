@@ -45,5 +45,16 @@ namespace Erp_Jornada.Repository
             await _context.SaveChangesAsync();
             return obj;
         }
+
+        public async Task<IList<T>> GetItemsPaginated(int pageNumber, int pageSize)
+         => await _context.Set<T>()
+         .Where(u => u.Ativo)
+         .Skip((pageNumber - 1) * pageSize)
+         .Take(pageSize)
+         .ToListAsync();
+
+        public async Task<int> CountItens()
+            => await _context.Set<T>()
+            .CountAsync(u => u.Ativo);
     }
 }

@@ -2,6 +2,7 @@
 using Flunt.Notifications;
 using System.Globalization;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Erp_Jornada.Tools
 {
@@ -22,6 +23,13 @@ namespace Erp_Jornada.Tools
                 }));
 
             return erros;
+        }
+
+        public static string FormatCpnj(this string cnpj)
+        {
+            cnpj = Regex.Replace(cnpj, "[^0-9]", "");
+
+            return cnpj;
         }
 
         public static string FormatName(this string name) =>

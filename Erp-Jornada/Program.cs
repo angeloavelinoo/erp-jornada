@@ -1,6 +1,8 @@
+using AutoMapper;
 using Erp_Jornada.Configs;
 using Erp_Jornada.Data;
 using Erp_Jornada.Dtos;
+using Erp_Jornada.Mapper;
 using Erp_Jornada.Middlewares;
 using Erp_Jornada.Repository;
 using Erp_Jornada.Services;
@@ -18,14 +20,23 @@ builder.Services.AddControllers(options =>
         options.SuppressModelStateInvalidFilter = true;
 
     });
-
+builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 builder.Services.AddServiceSwagger();
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+builder.Services.AddHttpClient();
+
+#region ADICIONANDO SERVICES
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<UsuarioRepository>();
+builder.Services.AddScoped<MarcaRepository>();
+builder.Services.AddScoped<MarcaService>();
+#endregion
+builder.Services.AddAutoMapperConfiguration();
+builder.Services.AddServiceJwt();
+
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var corsName = "cors";

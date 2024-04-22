@@ -10,5 +10,6 @@ namespace Erp_Jornada.Data
 
         }
         DbSet<Usuario> Usuario { get; set; }
+        DbSet<Marca> Marca { get; set; }
     }
 }
