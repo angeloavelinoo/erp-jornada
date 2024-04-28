@@ -1,4 +1,5 @@
 ﻿using Erp_Jornada.Dtos.UsuarioDTO;
+using Erp_Jornada.Model;
 using Erp_Jornada.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +17,18 @@ namespace Erp_Jornada.Controllers
         public async Task<IActionResult> Create(RegisterDto usuario)
         {
             return ServiceResponse(await _usuarioService.Add(usuario));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetById(int id)
+        {
+            return ServiceResponse(await _usuarioService.GetById(id));
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(UsuarioUpdateDTO usuario)
+        {
+            return ServiceResponse(await _usuarioService.Update(usuario));
         }
     }
 }

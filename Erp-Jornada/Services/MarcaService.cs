@@ -11,10 +11,11 @@ using System.Net;
 
 namespace Erp_Jornada.Services
 {
-    public class MarcaService(MarcaRepository marcaRepository, UsuarioService usuarioService, IMapper mapper)
+    public class MarcaService(MarcaRepository marcaRepository, UsuarioService usuarioService, IMapper mapper, UsuarioRepository usuarioRepository)
     {
         private readonly MarcaRepository _marcaRepository = marcaRepository;
         private readonly UsuarioService _usuarioService = usuarioService;
+        private readonly UsuarioRepository _usuarioRepository = usuarioRepository;
         private readonly IMapper _mapper = mapper;
         public async Task<ResultModel<dynamic>> Add(MarcaAddDTO marcaDTO)
         {
@@ -22,6 +23,8 @@ namespace Erp_Jornada.Services
                 new(marcaDTO.Nome),
                 (marcaDTO.Email),
                 (marcaDTO.Cnpj),
+                (marcaDTO.Telefone),
+                (marcaDTO.Celular),
                 BCrypt.Net.BCrypt.HashPassword(marcaDTO.Senha));
 
 
@@ -69,7 +72,10 @@ namespace Erp_Jornada.Services
             if (marca == null)
                 return new(HttpStatusCode.NotFound, "Marca não encontrada");
 
+            Usuario usuario = await _usuarioRepository.GetByEmail(marca.Email);
+
             await _marcaRepository.Remove(marca);
+            await _usuarioRepository.Remove(usuario);
 
             return new();
 
@@ -83,11 +89,20 @@ namespace Erp_Jornada.Services
             if (marca == null)
                 return new(HttpStatusCode.NotFound, "Marca não encontrada");
 
+            Usuario usuario = await _usuarioRepository.GetByEmail(marca.Email);
+
             marca.Nome = model.Nome;
             marca.Cnpj = model.Cnpj;
             marca.Email = model.Email;
-            marca.Senha = model.Senha;
+            marca.Senha = BCrypt.Net.BCrypt.HashPassword(model.Senha);
+            marca.Telefone = model.Telefone;
+            marca.Celular = model.Celular;
+            usuario.Email = model.Email;
+            usuario.Nome = model.Nome;
+            usuario.Senha = BCrypt.Net.BCrypt.HashPassword(model.Senha);
+
             await _marcaRepository.Update(marca);
+            await _usuarioRepository.Update(usuario);
 
             return new();
 
