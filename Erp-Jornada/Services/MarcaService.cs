@@ -51,18 +51,14 @@ namespace Erp_Jornada.Services
             return new(_mapper.Map<MarcaDTO>(marca));
         }
 
-        public async Task<ResultModel<BaseDTOPagination<MarcaListDTO>>> GetList(int pageNumber, int pageSize)
+        public async Task<ResultModel<IList<MarcaListDTO>>> GetList(int pageNumber, int pageSize)
         {
             var marcas = await _marcaRepository.GetItens();
 
             if (marcas.Count == 0)
                 return new(HttpStatusCode.NotFound, "Nenhuma marca foi encontrada");
 
-            return new(new BaseDTOPagination<MarcaListDTO>(
-                          new(await _marcaRepository.CountItens(),
-                          pageNumber,
-                          pageSize),
-                          _mapper.Map<IList<MarcaListDTO>>(marcas)));
+            return new(_mapper.Map<IList<MarcaListDTO>>(marcas));
         }
 
         public async Task<ResultModel<dynamic>> Remove(int id)
